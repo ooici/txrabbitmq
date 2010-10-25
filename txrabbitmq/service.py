@@ -9,8 +9,7 @@ from txrabbitmq.irabbitmqctl import IRabbitMQControlService
 
 
 QUEUE_INFO_ITEMS = ["name", "durable", "auto_delete", "arguments", "pid", 
-"messages_ready", "messages_unacknowledged", "messages_uncommitted", "messages", "acks_uncommitted", 
-"consumers", "transactions", "memory"]
+"messages_ready", "messages_unacknowledged", "messages", "consumers", "memory"]
 
 EXCHANGE_INFO_ITEMS = ["name", "type", "durable", "auto_delete", "arguments"]
 
@@ -155,9 +154,11 @@ class RabbitMQControlService(service.Service):
         if vhostpath is None:
             vhostpath = "/"
         vhostpath = Binary(vhostpath)
+
         if queueinfoitem is None:
             infoitems = [Atom(item) for item in QUEUE_INFO_ITEMS]
-        result = yield self.process.callRemote(self.remote_nodename, "rabbit_amqqueue", "info_all", vhostpath, infoitems)
+        result = yield self.process.callRemote(self.remote_nodename, "rabbit_amqqueue",
+                "info_all", vhostpath, infoitems)
         info_all = []
         for v in result:
             info_all.append((v[0][1][3].value, 
@@ -168,12 +169,9 @@ class RabbitMQControlService(service.Service):
                  "pid":v[4][1].nodeName.text,
                  "messages_ready":v[5][1],
                  "messages_unacknowledged":v[6][1],
-                 "messages_uncommitted":v[7][1],
-                 "messages":v[8][1],
-                 "acks_uncommitted":v[9][1],
-                 "memory":v[10][1],
-                 "transactions":v[11][1],
-                 "memory":v[12][1]}))
+                 "messages":v[7][1],
+                 "consumers":v[8][1],
+                 "memory":v[9][1]}))
         response = {"command":"list_queues", "vhostpath":vhostpath.value, "result":info_all}
         returnValue(response)
 
