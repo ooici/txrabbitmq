@@ -38,6 +38,12 @@ class RabbitMQControlService(service.Service):
         self.remote_nodename = remote_nodename
         self.module = module
 
+    def shutdown(self):
+        """Close open connections and clean up"""
+        # better way to do this?
+        for epmd in self.process.oneShotEpmds.itervalues():
+            epmd.closeConnections()
+
     @inlineCallbacks
     def add_user(self, username, password):
         """add new user with given password"""
