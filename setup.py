@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
   name = "txrabbitmq",
-  version="0.3",
+  version="0.4",
   description="RabbitMQ's 'rabbitmqctl' as a Twisted Service",
   
   author="Alex Clemesha",
